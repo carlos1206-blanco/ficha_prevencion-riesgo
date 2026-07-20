@@ -1,0 +1,150 @@
+<a routerLink="/" class="enlace-volver">&larr; Volver al listado</a>
+
+<div *ngIf="cargando" class="vacio">Cargando ficha…</div>
+<p *ngIf="error" class="mensaje-error">{{ error }}</p>
+
+<ng-container *ngIf="trabajador as t">
+  <div class="encabezado-ficha">
+    <div>
+      <h1>{{ nombreCompleto() }}</h1>
+      <p class="encabezado-ficha__rut">{{ t.personal.rut }}</p>
+    </div>
+    <a class="btn btn--primario" [routerLink]="['/trabajador', t._id, 'editar']">Editar ficha</a>
+  </div>
+
+  <div class="rejilla-fichas">
+
+    <!-- Ficha: Datos Personales -->
+    <section class="ficha-tag ficha-tag--personal">
+      <div class="ficha-tag__perforacion"></div>
+      <div class="ficha-tag__cabecera">
+        <span class="ficha-tag__etiqueta">Datos personales</span>
+      </div>
+      <div class="ficha-tag__cuerpo">
+        <div class="dato"><span class="dato__etiqueta">Nombres</span><span class="dato__valor">{{ t.personal.nombres }}</span></div>
+        <div class="dato"><span class="dato__etiqueta">Apellidos</span><span class="dato__valor">{{ t.personal.apellidos }}</span></div>
+        <div class="dato"><span class="dato__etiqueta">RUT</span><span class="dato__valor">{{ t.personal.rut }}</span></div>
+        <div class="dato" *ngIf="t.personal.fechaNacimiento"><span class="dato__etiqueta">Fecha de nacimiento</span><span class="dato__valor">{{ t.personal.fechaNacimiento | date:'dd-MM-yyyy' }}</span></div>
+        <div class="dato" *ngIf="t.personal.telefono"><span class="dato__etiqueta">Teléfono</span><span class="dato__valor">{{ t.personal.telefono }}</span></div>
+        <div class="dato" *ngIf="t.personal.correo"><span class="dato__etiqueta">Correo</span><span class="dato__valor">{{ t.personal.correo }}</span></div>
+        <div class="dato" *ngIf="t.personal.direccion"><span class="dato__etiqueta">Dirección</span><span class="dato__valor">{{ t.personal.direccion }}</span></div>
+        <div class="dato" *ngIf="t.personal.comuna"><span class="dato__etiqueta">Comuna</span><span class="dato__valor">{{ t.personal.comuna }}</span></div>
+        <div class="dato" *ngIf="t.personal.contactoEmergenciaNombre"><span class="dato__etiqueta">Contacto de emergencia</span><span class="dato__valor">{{ t.personal.contactoEmergenciaNombre }} ({{ t.personal.contactoEmergenciaRelacion }})</span></div>
+        <div class="dato" *ngIf="t.personal.contactoEmergenciaTelefono"><span class="dato__etiqueta">Tel. de emergencia</span><span class="dato__valor">{{ t.personal.contactoEmergenciaTelefono }}</span></div>
+      </div>
+    </section>
+
+    <!-- Ficha: Datos Médicos -->
+    <section class="ficha-tag ficha-tag--medico">
+      <div class="ficha-tag__perforacion"></div>
+      <div class="ficha-tag__cabecera">
+        <span class="ficha-tag__etiqueta">Datos médicos</span>
+        <span class="insignia" [ngClass]="{
+          'insignia--ok': t.medico?.aptitudLaboral === 'Apto',
+          'insignia--alerta': t.medico?.aptitudLaboral === 'No apto',
+          'insignia--pendiente': !t.medico?.aptitudLaboral || t.medico?.aptitudLaboral === 'Pendiente de evaluación' || t.medico?.aptitudLaboral === 'Apto con restricciones'
+        }">{{ t.medico?.aptitudLaboral || 'Pendiente de evaluación' }}</span>
+      </div>
+      <div class="ficha-tag__cuerpo">
+        <div class="dato" *ngIf="t.medico?.grupoSanguineo"><span class="dato__etiqueta">Grupo sanguíneo</span><span class="dato__valor">{{ t.medico?.grupoSanguineo }}</span></div>
+        <div class="dato" *ngIf="t.medico?.restricciones"><span class="dato__etiqueta">Restricciones</span><span class="dato__valor">{{ t.medico?.restricciones }}</span></div>
+        <div class="dato" *ngIf="t.medico?.fechaUltimoExamen"><span class="dato__etiqueta">Último examen</span><span class="dato__valor">{{ t.medico?.fechaUltimoExamen | date:'dd-MM-yyyy' }}</span></div>
+        <div class="dato" *ngIf="t.medico?.proximoExamen"><span class="dato__etiqueta">Próximo examen</span><span class="dato__valor">{{ t.medico?.proximoExamen | date:'dd-MM-yyyy' }}</span></div>
+
+        <div *ngIf="t.medico?.alergias?.length" style="margin-top:10px">
+          <span class="dato__etiqueta">Alergias</span>
+          <ul class="sublista">
+            <li class="sublista__item" *ngFor="let a of t.medico?.alergias">{{ a }}</li>
+          </ul>
+        </div>
+
+        <div *ngIf="t.medico?.enfermedadesCronicas?.length" style="margin-top:10px">
+          <span class="dato__etiqueta">Enfermedades crónicas</span>
+          <ul class="sublista">
+            <li class="sublista__item" *ngFor="let e of t.medico?.enfermedadesCronicas">{{ e }}</li>
+          </ul>
+        </div>
+
+        <div style="margin-top:14px">
+          <span class="dato__etiqueta">Licencias médicas</span>
+          <ul class="sublista" *ngIf="t.medico?.licenciasMedicas?.length; else sinLicencias">
+            <li class="sublista__item" *ngFor="let l of t.medico?.licenciasMedicas">
+              <div class="sublista__item-titulo">
+                <span>{{ l.tipo }}</span>
+                <span>{{ l.fechaInicio | date:'dd-MM-yyyy' }}<span *ngIf="l.fechaTermino"> — {{ l.fechaTermino | date:'dd-MM-yyyy' }}</span></span>
+              </div>
+              <div class="sublista__item-detalle" *ngIf="l.diagnostico">{{ l.diagnostico }}</div>
+            </li>
+          </ul>
+          <ng-template #sinLicencias><p class="vacio">Sin licencias registradas.</p></ng-template>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ficha: Datos Laborales -->
+    <section class="ficha-tag ficha-tag--laboral">
+      <div class="ficha-tag__perforacion"></div>
+      <div class="ficha-tag__cabecera">
+        <span class="ficha-tag__etiqueta">Datos laborales</span>
+      </div>
+      <div class="ficha-tag__cuerpo">
+        <div class="dato" *ngIf="t.laboral?.cargo"><span class="dato__etiqueta">Cargo</span><span class="dato__valor">{{ t.laboral?.cargo }}</span></div>
+        <div class="dato" *ngIf="t.laboral?.departamento"><span class="dato__etiqueta">Departamento</span><span class="dato__valor">{{ t.laboral?.departamento }}</span></div>
+        <div class="dato" *ngIf="t.laboral?.jefeDirecto"><span class="dato__etiqueta">Jefe directo</span><span class="dato__valor">{{ t.laboral?.jefeDirecto }}</span></div>
+        <div class="dato" *ngIf="t.laboral?.fechaIngreso"><span class="dato__etiqueta">Fecha de ingreso</span><span class="dato__valor">{{ t.laboral?.fechaIngreso | date:'dd-MM-yyyy' }}</span></div>
+        <div class="dato" *ngIf="t.laboral?.tipoContrato"><span class="dato__etiqueta">Tipo de contrato</span><span class="dato__valor">{{ t.laboral?.tipoContrato }}</span></div>
+        <div class="dato" *ngIf="t.laboral?.lugarTrabajo"><span class="dato__etiqueta">Lugar de trabajo</span><span class="dato__valor">{{ t.laboral?.lugarTrabajo }}</span></div>
+
+        <div *ngIf="t.laboral?.riesgosAsociados?.length" style="margin-top:10px">
+          <span class="dato__etiqueta">Riesgos asociados al cargo</span>
+          <ul class="sublista">
+            <li class="sublista__item" *ngFor="let r of t.laboral?.riesgosAsociados">{{ r }}</li>
+          </ul>
+        </div>
+
+        <div style="margin-top:14px">
+          <span class="dato__etiqueta">Accidentes</span>
+          <ul class="sublista" *ngIf="t.laboral?.accidentes?.length; else sinAccidentes">
+            <li class="sublista__item" *ngFor="let ac of t.laboral?.accidentes">
+              <div class="sublista__item-titulo">
+                <span>{{ ac.tipo }}</span>
+                <span>{{ ac.fecha | date:'dd-MM-yyyy' }}</span>
+              </div>
+              <div class="sublista__item-detalle" *ngIf="ac.descripcion">{{ ac.descripcion }}</div>
+            </li>
+          </ul>
+          <ng-template #sinAccidentes><p class="vacio">Sin accidentes registrados.</p></ng-template>
+        </div>
+
+        <div style="margin-top:14px">
+          <span class="dato__etiqueta">Capacitaciones</span>
+          <ul class="sublista" *ngIf="t.laboral?.capacitaciones?.length; else sinCapacitaciones">
+            <li class="sublista__item" *ngFor="let c of t.laboral?.capacitaciones">
+              <div class="sublista__item-titulo">
+                <span>{{ c.nombre }}</span>
+                <span>{{ c.fecha | date:'dd-MM-yyyy' }}</span>
+              </div>
+              <div class="sublista__item-detalle" *ngIf="c.entidad">{{ c.entidad }}<span *ngIf="c.horas"> · {{ c.horas }} hrs</span></div>
+            </li>
+          </ul>
+          <ng-template #sinCapacitaciones><p class="vacio">Sin capacitaciones registradas.</p></ng-template>
+        </div>
+
+        <div style="margin-top:14px">
+          <span class="dato__etiqueta">Entrega de EPP</span>
+          <ul class="sublista" *ngIf="t.laboral?.entregasEpp?.length; else sinEpp">
+            <li class="sublista__item" *ngFor="let e of t.laboral?.entregasEpp">
+              <div class="sublista__item-titulo">
+                <span>{{ e.elemento }}</span>
+                <span>{{ e.fechaEntrega | date:'dd-MM-yyyy' }}</span>
+              </div>
+              <div class="sublista__item-detalle">Cantidad: {{ e.cantidad || 1 }}<span *ngIf="e.vidaUtilMeses"> · Vida útil: {{ e.vidaUtilMeses }} meses</span></div>
+            </li>
+          </ul>
+          <ng-template #sinEpp><p class="vacio">Sin entregas registradas.</p></ng-template>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</ng-container>

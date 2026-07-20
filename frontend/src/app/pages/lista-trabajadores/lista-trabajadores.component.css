@@ -1,0 +1,140 @@
+.barra-busqueda {
+  margin-bottom: 24px;
+}
+
+.barra-busqueda input {
+  width: 100%;
+  font-size: 15px;
+  padding: 13px 16px;
+  border-radius: 9px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.barra-busqueda input:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.mensaje-error {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.estado-vacio {
+  text-align: center;
+  padding: 64px 24px;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  border: 1px dashed var(--color-border);
+}
+
+.estado-vacio p {
+  color: var(--color-ink-soft);
+  margin: 8px 0 20px;
+}
+
+.rejilla-trabajadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.tarjeta-resumen {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-tag);
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjeta-resumen__enlace {
+  text-decoration: none;
+  color: inherit;
+  padding: 18px 18px 14px;
+  display: block;
+}
+
+.tarjeta-resumen__cabecera {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.tarjeta-resumen__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.tarjeta-resumen__nombre {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.tarjeta-resumen__rut {
+  font-size: 12px;
+  color: var(--color-ink-soft);
+}
+
+.tarjeta-resumen__detalle {
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  margin-bottom: 10px;
+}
+
+.separador { margin: 0 6px; }
+
+.tarjeta-resumen__acciones {
+  display: flex;
+  gap: 8px;
+  padding: 0 18px 16px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+  margin: 0 18px 16px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ---------- Modal de confirmación ---------- */
+.modal-fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 34, 31, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.modal-caja {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.modal-caja p {
+  color: var(--color-ink-soft);
+  font-size: 14px;
+}
+
+.modal-caja__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}

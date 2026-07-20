@@ -1,0 +1,61 @@
+<div class="barra-busqueda">
+  <input
+    type="search"
+    placeholder="Buscar por nombre, RUT, cargo o departamento…"
+    [(ngModel)]="textoBusqueda"
+    (ngModelChange)="onBusquedaCambia()"
+    aria-label="Buscar trabajador"
+  />
+</div>
+
+<p *ngIf="error" class="mensaje-error">{{ error }}</p>
+
+<div *ngIf="cargando" class="vacio">Cargando trabajadores…</div>
+
+<div *ngIf="!cargando && trabajadores.length === 0" class="estado-vacio">
+  <h3>No hay trabajadores que mostrar</h3>
+  <p>Prueba con otro término de búsqueda, o registra un nuevo trabajador.</p>
+  <a class="btn btn--primario" routerLink="/trabajador/nuevo">+ Nuevo trabajador</a>
+</div>
+
+<div class="rejilla-trabajadores" *ngIf="!cargando && trabajadores.length > 0">
+  <div class="tarjeta-resumen" *ngFor="let t of trabajadores">
+    <a class="tarjeta-resumen__enlace" [routerLink]="['/trabajador', t._id]">
+      <div class="tarjeta-resumen__cabecera">
+        <div class="tarjeta-resumen__avatar">
+          {{ (t.personal.nombres.charAt(0) + t.personal.apellidos.charAt(0)) | uppercase }}
+        </div>
+        <div>
+          <div class="tarjeta-resumen__nombre">{{ nombreCompleto(t) }}</div>
+          <div class="tarjeta-resumen__rut">{{ t.personal.rut }}</div>
+        </div>
+      </div>
+      <div class="tarjeta-resumen__detalle">
+        <span>{{ t.laboral?.cargo || 'Sin cargo asignado' }}</span>
+        <span class="separador">·</span>
+        <span>{{ t.laboral?.departamento || 'Sin departamento' }}</span>
+      </div>
+      <span class="insignia" [ngClass]="{
+        'insignia--ok': t.medico?.aptitudLaboral === 'Apto',
+        'insignia--alerta': t.medico?.aptitudLaboral === 'No apto',
+        'insignia--pendiente': !t.medico?.aptitudLaboral || t.medico?.aptitudLaboral === 'Pendiente de evaluación' || t.medico?.aptitudLaboral === 'Apto con restricciones'
+      }">{{ t.medico?.aptitudLaboral || 'Pendiente de evaluación' }}</span>
+    </a>
+    <div class="tarjeta-resumen__acciones">
+      <a class="btn btn--secundario" [routerLink]="['/trabajador', t._id, 'editar']">Editar</a>
+      <button class="btn btn--peligro" (click)="confirmarEliminar(t._id!)">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmación de eliminación -->
+<div class="modal-fondo" *ngIf="idPendienteEliminar" (click)="cancelarEliminar()">
+  <div class="modal-caja" (click)="$event.stopPropagation()">
+    <h3>¿Eliminar esta ficha?</h3>
+    <p>Esta acción no se puede deshacer. Se eliminará toda la información personal, médica y laboral asociada.</p>
+    <div class="modal-caja__acciones">
+      <button class="btn btn--secundario" (click)="cancelarEliminar()">Cancelar</button>
+      <button class="btn btn--peligro" (click)="eliminar(idPendienteEliminar)">Sí, eliminar</button>
+    </div>
+  </div>
+</div>

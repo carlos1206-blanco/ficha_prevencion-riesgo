@@ -1,0 +1,333 @@
+/* =========================================================
+   Sistema de diseño — Fichas de Prevención de Riesgos
+   Inspirado en las tarjetas/etiquetas de identificación
+   industrial (tags de EPP, fichas de casillero, credenciales).
+   ========================================================= */
+
+:root {
+  /* Paleta */
+  --color-bg: #eef1ee;
+  --color-surface: #ffffff;
+  --color-ink: #16221f;
+  --color-ink-soft: #4d5a56;
+  --color-border: #d7ddd6;
+
+  --color-primary: #0e4d44;      /* verde institucional / seguridad */
+  --color-primary-ink: #ffffff;
+  --color-accent: #e2571c;       /* naranja de acción / advertencia */
+
+  --color-personal: #2b5c8a;     /* azul acero — identidad */
+  --color-medico: #b23a48;       /* rojo cruz — médico */
+  --color-laboral: #8a6d1d;      /* ocre casco — laboral */
+
+  --color-danger: #b23a48;
+  --color-success: #23744f;
+
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+
+  --radius: 10px;
+  --shadow-tag: 0 1px 2px rgba(22, 34, 31, 0.06), 0 6px 16px rgba(22, 34, 31, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  color: var(--color-ink);
+}
+
+a { color: inherit; }
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Layout utilitario ---------- */
+.contenedor {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+}
+
+/* ---------- Cabecera institucional ---------- */
+.cabecera {
+  background: var(--color-primary);
+  color: var(--color-primary-ink);
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+
+.cabecera__contenido {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cabecera__marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.cabecera__sello {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.cabecera__titulo {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.cabecera__subtitulo {
+  font-size: 12px;
+  opacity: 0.75;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  transition: transform 0.05s ease, filter 0.15s ease;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn--primario {
+  background: var(--color-accent);
+  color: #fff;
+}
+.btn--primario:hover { filter: brightness(1.06); }
+
+.btn--secundario {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-border);
+}
+.btn--secundario:hover { background: rgba(14, 77, 68, 0.06); }
+
+.btn--peligro {
+  background: transparent;
+  color: var(--color-danger);
+  border: 1.5px solid rgba(178, 58, 72, 0.35);
+}
+.btn--peligro:hover { background: rgba(178, 58, 72, 0.08); }
+
+.btn--sobre-oscuro {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.35);
+}
+.btn--sobre-oscuro:hover { background: rgba(255,255,255,0.2); }
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- Campos de formulario ---------- */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.campo label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.campo--error input,
+.campo--error select {
+  border-color: var(--color-danger);
+}
+
+.campo__mensaje-error {
+  font-size: 12px;
+  color: var(--color-danger);
+}
+
+.rejilla-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+
+@media (max-width: 640px) {
+  .rejilla-2 { grid-template-columns: 1fr; }
+}
+
+/* ---------- Tarjeta tipo "ficha/tag" (elemento distintivo) ----------
+   Simula una etiqueta física de EPP/casillero: perforación superior,
+   franja de categoría troquelada y borde de color por tema. */
+.ficha-tag {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-tag);
+  overflow: hidden;
+  border-top: 5px solid var(--tag-color, var(--color-primary));
+}
+
+.ficha-tag__perforacion {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+}
+
+.ficha-tag__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+}
+
+.ficha-tag__etiqueta {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tag-color, var(--color-primary));
+}
+
+.ficha-tag__cuerpo {
+  padding: 0 20px 20px;
+}
+
+.ficha-tag--personal { --tag-color: var(--color-personal); }
+.ficha-tag--medico   { --tag-color: var(--color-medico); }
+.ficha-tag--laboral  { --tag-color: var(--color-laboral); }
+
+/* Fila etiqueta/valor dentro de una ficha */
+.dato {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--color-border);
+  font-size: 14px;
+}
+.dato:last-child { border-bottom: none; }
+
+.dato__etiqueta {
+  color: var(--color-ink-soft);
+  flex-shrink: 0;
+}
+
+.dato__valor {
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Insignia de estado */
+.insignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.insignia--ok { background: rgba(35, 116, 79, 0.12); color: var(--color-success); }
+.insignia--alerta { background: rgba(178, 58, 72, 0.12); color: var(--color-danger); }
+.insignia--pendiente { background: rgba(138, 109, 29, 0.14); color: var(--color-laboral); }
+
+/* Sub-lista dentro de fichas (accidentes, capacitaciones, licencias, EPP) */
+.sublista {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sublista__item {
+  background: var(--color-bg);
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+.sublista__item-titulo {
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+}
+.sublista__item-detalle {
+  color: var(--color-ink-soft);
+  margin-top: 2px;
+}
+
+.vacio {
+  color: var(--color-ink-soft);
+  font-size: 13px;
+  font-style: italic;
+}

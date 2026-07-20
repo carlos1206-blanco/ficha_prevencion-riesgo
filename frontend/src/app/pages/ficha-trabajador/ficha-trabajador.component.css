@@ -1,0 +1,34 @@
+.enlace-volver {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+}
+.enlace-volver:hover { color: var(--color-primary); }
+
+.encabezado-ficha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.encabezado-ficha__rut {
+  color: var(--color-ink-soft);
+  margin: 2px 0 0;
+}
+
+.rejilla-fichas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.mensaje-error {
+  color: var(--color-danger);
+  font-weight: 600;
+}

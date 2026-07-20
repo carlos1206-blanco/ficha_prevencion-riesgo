@@ -1,0 +1,23 @@
+# Compilado
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Dependencias
+node_modules/
+
+# IDEs
+.idea/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Variables de entorno locales
+.env

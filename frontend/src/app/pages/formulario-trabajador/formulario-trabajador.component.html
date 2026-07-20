@@ -1,0 +1,320 @@
+<a routerLink="/" class="enlace-volver">&larr; Volver al listado</a>
+
+<h1>{{ esEdicion ? 'Editar ficha' : 'Nueva ficha de trabajador' }}</h1>
+
+<p *ngIf="error" class="mensaje-error">{{ error }}</p>
+
+<form [formGroup]="formulario" (ngSubmit)="guardar()" class="formulario-ficha">
+  <div class="rejilla-fichas">
+
+    <!-- ===================== PERSONAL ===================== -->
+    <section class="ficha-tag ficha-tag--personal" formGroupName="personal">
+      <div class="ficha-tag__perforacion"></div>
+      <div class="ficha-tag__cabecera"><span class="ficha-tag__etiqueta">Datos personales</span></div>
+      <div class="ficha-tag__cuerpo">
+        <div class="rejilla-2">
+          <div class="campo" [class.campo--error]="formulario.get('personal.rut')?.invalid && formulario.get('personal.rut')?.touched">
+            <label>RUT *</label>
+            <input formControlName="rut" placeholder="12.345.678-9" />
+          </div>
+          <div class="campo">
+            <label>Fecha de nacimiento</label>
+            <input type="date" formControlName="fechaNacimiento" />
+          </div>
+          <div class="campo" [class.campo--error]="formulario.get('personal.nombres')?.invalid && formulario.get('personal.nombres')?.touched">
+            <label>Nombres *</label>
+            <input formControlName="nombres" />
+          </div>
+          <div class="campo" [class.campo--error]="formulario.get('personal.apellidos')?.invalid && formulario.get('personal.apellidos')?.touched">
+            <label>Apellidos *</label>
+            <input formControlName="apellidos" />
+          </div>
+          <div class="campo">
+            <label>Teléfono</label>
+            <input formControlName="telefono" />
+          </div>
+          <div class="campo">
+            <label>Correo</label>
+            <input type="email" formControlName="correo" />
+          </div>
+          <div class="campo">
+            <label>Dirección</label>
+            <input formControlName="direccion" />
+          </div>
+          <div class="campo">
+            <label>Comuna</label>
+            <input formControlName="comuna" />
+          </div>
+          <div class="campo">
+            <label>Contacto de emergencia</label>
+            <input formControlName="contactoEmergenciaNombre" />
+          </div>
+          <div class="campo">
+            <label>Relación</label>
+            <input formControlName="contactoEmergenciaRelacion" />
+          </div>
+          <div class="campo">
+            <label>Teléfono de emergencia</label>
+            <input formControlName="contactoEmergenciaTelefono" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MÉDICO ===================== -->
+    <section class="ficha-tag ficha-tag--medico" formGroupName="medico">
+      <div class="ficha-tag__perforacion"></div>
+      <div class="ficha-tag__cabecera"><span class="ficha-tag__etiqueta">Datos médicos</span></div>
+      <div class="ficha-tag__cuerpo">
+        <div class="rejilla-2">
+          <div class="campo">
+            <label>Aptitud laboral</label>
+            <select formControlName="aptitudLaboral">
+              <option *ngFor="let a of aptitudes" [value]="a">{{ a }}</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Grupo sanguíneo</label>
+            <input formControlName="grupoSanguineo" placeholder="O+, A-, etc." />
+          </div>
+          <div class="campo">
+            <label>Fecha último examen</label>
+            <input type="date" formControlName="fechaUltimoExamen" />
+          </div>
+          <div class="campo">
+            <label>Próximo examen</label>
+            <input type="date" formControlName="proximoExamen" />
+          </div>
+        </div>
+        <div class="campo">
+          <label>Tipo de último examen</label>
+          <input formControlName="tipoUltimoExamen" placeholder="Preocupacional, ocupacional, altura física…" />
+        </div>
+        <div class="campo">
+          <label>Restricciones</label>
+          <textarea formControlName="restricciones" rows="2"></textarea>
+        </div>
+
+        <!-- Alergias -->
+        <div class="sublista-editable">
+          <div class="sublista-editable__cabecera">
+            <label>Alergias</label>
+            <button type="button" class="btn-agregar" (click)="agregarTexto('medico.alergias')">+ Agregar</button>
+          </div>
+          <div class="fila-editable" *ngFor="let ctrl of arreglo('medico.alergias').controls; let i = index" [formGroup]="$any(arreglo('medico.alergias'))">
+            <input [formControlName]="i" placeholder="Ej: Penicilina" />
+            <button type="button" class="btn-quitar" (click)="quitarTexto('medico.alergias', i)" aria-label="Quitar">×</button>
+          </div>
+        </div>
+
+        <!-- Enfermedades crónicas -->
+        <div class="sublista-editable">
+          <div class="sublista-editable__cabecera">
+            <label>Enfermedades crónicas</label>
+            <button type="button" class="btn-agregar" (click)="agregarTexto('medico.enfermedadesCronicas')">+ Agregar</button>
+          </div>
+          <div class="fila-editable" *ngFor="let ctrl of arreglo('medico.enfermedadesCronicas').controls; let i = index" [formGroup]="$any(arreglo('medico.enfermedadesCronicas'))">
+            <input [formControlName]="i" placeholder="Ej: Hipertensión" />
+            <button type="button" class="btn-quitar" (click)="quitarTexto('medico.enfermedadesCronicas', i)" aria-label="Quitar">×</button>
+          </div>
+        </div>
+
+        <!-- Licencias médicas -->
+        <div class="sublista-editable" formArrayName="licenciasMedicas">
+          <div class="sublista-editable__cabecera">
+            <label>Licencias médicas</label>
+            <button type="button" class="btn-agregar" (click)="agregarLicencia()">+ Agregar licencia</button>
+          </div>
+          <div class="bloque-editable" *ngFor="let grupo of arreglo('medico.licenciasMedicas').controls; let i = index" [formGroupName]="i">
+            <div class="rejilla-2">
+              <div class="campo">
+                <label>Tipo</label>
+                <select formControlName="tipo">
+                  <option *ngFor="let t of tiposLicencia" [value]="t">{{ t }}</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label>Días autorizados</label>
+                <input type="number" formControlName="diasAutorizados" min="0" />
+              </div>
+              <div class="campo">
+                <label>Fecha inicio *</label>
+                <input type="date" formControlName="fechaInicio" />
+              </div>
+              <div class="campo">
+                <label>Fecha término</label>
+                <input type="date" formControlName="fechaTermino" />
+              </div>
+            </div>
+            <div class="campo">
+              <label>Diagnóstico</label>
+              <input formControlName="diagnostico" />
+            </div>
+            <button type="button" class="btn-quitar-bloque" (click)="quitarLicencia(i)">Quitar licencia</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== LABORAL ===================== -->
+    <section class="ficha-tag ficha-tag--laboral" formGroupName="laboral">
+      <div class="ficha-tag__perforacion"></div>
+      <div class="ficha-tag__cabecera"><span class="ficha-tag__etiqueta">Datos laborales</span></div>
+      <div class="ficha-tag__cuerpo">
+        <div class="rejilla-2">
+          <div class="campo">
+            <label>Cargo</label>
+            <input formControlName="cargo" />
+          </div>
+          <div class="campo">
+            <label>Departamento</label>
+            <input formControlName="departamento" />
+          </div>
+          <div class="campo">
+            <label>Jefe directo</label>
+            <input formControlName="jefeDirecto" />
+          </div>
+          <div class="campo">
+            <label>Fecha de ingreso</label>
+            <input type="date" formControlName="fechaIngreso" />
+          </div>
+          <div class="campo">
+            <label>Tipo de contrato</label>
+            <select formControlName="tipoContrato">
+              <option *ngFor="let tc of tiposContrato" [value]="tc">{{ tc }}</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Lugar de trabajo</label>
+            <input formControlName="lugarTrabajo" />
+          </div>
+        </div>
+
+        <!-- Riesgos asociados -->
+        <div class="sublista-editable">
+          <div class="sublista-editable__cabecera">
+            <label>Riesgos asociados al cargo</label>
+            <button type="button" class="btn-agregar" (click)="agregarTexto('laboral.riesgosAsociados')">+ Agregar</button>
+          </div>
+          <div class="fila-editable" *ngFor="let ctrl of arreglo('laboral.riesgosAsociados').controls; let i = index" [formGroup]="$any(arreglo('laboral.riesgosAsociados'))">
+            <input [formControlName]="i" placeholder="Ej: Manejo de residuos, trabajo en altura…" />
+            <button type="button" class="btn-quitar" (click)="quitarTexto('laboral.riesgosAsociados', i)" aria-label="Quitar">×</button>
+          </div>
+        </div>
+
+        <!-- Accidentes -->
+        <div class="sublista-editable" formArrayName="accidentes">
+          <div class="sublista-editable__cabecera">
+            <label>Accidentes</label>
+            <button type="button" class="btn-agregar" (click)="agregarAccidente()">+ Agregar accidente</button>
+          </div>
+          <div class="bloque-editable" *ngFor="let grupo of arreglo('laboral.accidentes').controls; let i = index" [formGroupName]="i">
+            <div class="rejilla-2">
+              <div class="campo">
+                <label>Tipo</label>
+                <select formControlName="tipo">
+                  <option *ngFor="let ta of tiposAccidente" [value]="ta">{{ ta }}</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label>Fecha *</label>
+                <input type="date" formControlName="fecha" />
+              </div>
+              <div class="campo">
+                <label>Parte del cuerpo afectada</label>
+                <input formControlName="parteCuerpoAfectada" />
+              </div>
+              <div class="campo">
+                <label>Días perdidos</label>
+                <input type="number" formControlName="diasPerdidos" min="0" />
+              </div>
+              <div class="campo">
+                <label>Organismo administrador</label>
+                <input formControlName="organismoAdministrador" placeholder="Mutual, ACHS, ISL…" />
+              </div>
+              <div class="campo">
+                <label>N° de denuncia (DIAT)</label>
+                <input formControlName="numeroDenuncia" />
+              </div>
+            </div>
+            <div class="campo">
+              <label>Descripción</label>
+              <textarea formControlName="descripcion" rows="2"></textarea>
+            </div>
+            <button type="button" class="btn-quitar-bloque" (click)="quitarAccidente(i)">Quitar accidente</button>
+          </div>
+        </div>
+
+        <!-- Capacitaciones -->
+        <div class="sublista-editable" formArrayName="capacitaciones">
+          <div class="sublista-editable__cabecera">
+            <label>Capacitaciones</label>
+            <button type="button" class="btn-agregar" (click)="agregarCapacitacion()">+ Agregar capacitación</button>
+          </div>
+          <div class="bloque-editable" *ngFor="let grupo of arreglo('laboral.capacitaciones').controls; let i = index" [formGroupName]="i">
+            <div class="rejilla-2">
+              <div class="campo">
+                <label>Nombre *</label>
+                <input formControlName="nombre" />
+              </div>
+              <div class="campo">
+                <label>Fecha *</label>
+                <input type="date" formControlName="fecha" />
+              </div>
+              <div class="campo">
+                <label>Horas</label>
+                <input type="number" formControlName="horas" min="0" />
+              </div>
+              <div class="campo">
+                <label>Entidad relatora</label>
+                <input formControlName="entidad" />
+              </div>
+              <div class="campo">
+                <label>Vigencia hasta</label>
+                <input type="date" formControlName="vigenciaHasta" />
+              </div>
+            </div>
+            <button type="button" class="btn-quitar-bloque" (click)="quitarCapacitacion(i)">Quitar capacitación</button>
+          </div>
+        </div>
+
+        <!-- Entregas de EPP -->
+        <div class="sublista-editable" formArrayName="entregasEpp">
+          <div class="sublista-editable__cabecera">
+            <label>Entrega de EPP</label>
+            <button type="button" class="btn-agregar" (click)="agregarEpp()">+ Agregar entrega</button>
+          </div>
+          <div class="bloque-editable" *ngFor="let grupo of arreglo('laboral.entregasEpp').controls; let i = index" [formGroupName]="i">
+            <div class="rejilla-2">
+              <div class="campo">
+                <label>Elemento *</label>
+                <input formControlName="elemento" placeholder="Guantes, casco, arnés…" />
+              </div>
+              <div class="campo">
+                <label>Fecha de entrega *</label>
+                <input type="date" formControlName="fechaEntrega" />
+              </div>
+              <div class="campo">
+                <label>Cantidad</label>
+                <input type="number" formControlName="cantidad" min="1" />
+              </div>
+              <div class="campo">
+                <label>Vida útil (meses)</label>
+                <input type="number" formControlName="vidaUtilMeses" min="0" />
+              </div>
+            </div>
+            <button type="button" class="btn-quitar-bloque" (click)="quitarEpp(i)">Quitar entrega</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="barra-acciones-formulario">
+    <button type="button" class="btn btn--secundario" (click)="cancelar()">Cancelar</button>
+    <button type="submit" class="btn btn--primario" [disabled]="guardando">
+      {{ guardando ? 'Guardando…' : (esEdicion ? 'Guardar cambios' : 'Crear ficha') }}
+    </button>
+  </div>
+</form>
